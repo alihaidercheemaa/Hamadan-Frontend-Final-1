@@ -1067,7 +1067,7 @@ body {
               
               <div id="payment-section">
                 <button type="button" id="rzp-button" class="payment-button">
-                  <i class="fas fa-credit-card"></i> Complete Payment
+                  <i class="fas fa-credit-card"></i> Proceed to payment
                 </button>
               </div>
               
@@ -1873,5 +1873,22 @@ function getFormData() {
 
 
   
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+  const nextButtons = document.querySelectorAll('.btn-next');
+
+  nextButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const targetStepNum = parseInt(button.getAttribute('data-next'));
+      const targetStep = document.getElementById(`step-${targetStepNum}`);
+
+      if (targetStep) {
+        // Scroll to the top of the next step
+        targetStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+});
+    </script>
   </body>
 </html>
