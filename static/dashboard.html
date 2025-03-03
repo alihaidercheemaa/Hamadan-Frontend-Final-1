@@ -1121,12 +1121,15 @@
             <div class="chart-card">
                 <canvas id="membershipStatusChart"></canvas>
             </div>
+
+            
         </div>
     </div>
 
 
 
 
+   
     <script>
         // Function to format numbers with commas
         const formatNumber = (num) => {
@@ -1138,7 +1141,7 @@
         const updateStats = (data) => {
             document.getElementById('totalUsers').textContent = formatNumber(data.totalUsers || 0);
             document.getElementById('totalAdmins').textContent = formatNumber(data.totalAdmins || 0);
-            document.getElementById('totalMembers').textContent = formatNumber(data.totalMembers || 0);
+            // document.getElementById('totalMembers').textContent = formatNumber(data.totalMembers || 0);
             document.getElementById('totalDonors').textContent = formatNumber(data.totalDonors || 0);
             document.getElementById('totalCollaborators').textContent = formatNumber(data.totalCollaborators || 0);
             document.getElementById('totalEbookOrders').textContent = formatNumber(data.totalEbookOrders || 0);
@@ -1149,34 +1152,32 @@
         };
     
         let userTypeChart = null;
-        let membershipStatusChart = null;
+        // let membershipStatusChart = null;
     
         const createCharts = (data) => {
             // Destroy existing charts if they exist
             if (userTypeChart) {
                 userTypeChart.destroy();
             }
-            if (membershipStatusChart) {
-                membershipStatusChart.destroy();
-            }
+            // if (membershipStatusChart) {
+            //     membershipStatusChart.destroy();
+            // }
     
             // User Type Distribution Chart
             const userTypeCtx = document.getElementById('userTypeChart').getContext('2d');
             userTypeChart = new Chart(userTypeCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Admins', 'Members', 'Donors', 'Collaborators'],
+                    labels: ['Admins', 'Donors', 'Collaborators'],
                     datasets: [{
                         label: 'User Distribution',
                         data: [
                             data.totalAdmins || 0,
-                            data.totalMembers || 0,
                             data.totalDonors || 0,
                             data.totalCollaborators || 0
                         ],
                         backgroundColor: [
                             '#3b82f6',
-                            '#10b981',
                             '#f59e0b',
                             '#8b5cf6'
                         ]
@@ -1209,41 +1210,41 @@
                 }
             });
     
-            // Membership Status Chart
-            const membershipCtx = document.getElementById('membershipStatusChart').getContext('2d');
-            membershipStatusChart = new Chart(membershipCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pending', 'Approved', 'Rejected'],
-                    datasets: [{
-                        data: [
-                            data.pendingMembers || 0,
-                            data.approvedMembers || 0,
-                            data.rejectedMembers || 0
-                        ],
-                        backgroundColor: [
-                            '#f59e0b',
-                            '#10b981',
-                            '#ef4444'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Membership Status Distribution',
-                            color: '#e5e7eb',
-                            font: { size: 16, weight: '600' }
-                        },
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#9ca3af' }
-                        }
-                    }
-                }
-            });
+            // Membership Status Chart (Commented Out)
+            // const membershipCtx = document.getElementById('membershipStatusChart').getContext('2d');
+            // membershipStatusChart = new Chart(membershipCtx, {
+            //     type: 'doughnut',
+            //     data: {
+            //         labels: ['Pending', 'Approved', 'Rejected'],
+            //         datasets: [{
+            //             data: [
+            //                 data.pendingMembers || 0,
+            //                 data.approvedMembers || 0,
+            //                 data.rejectedMembers || 0
+            //             ],
+            //             backgroundColor: [
+            //                 '#f59e0b',
+            //                 '#10b981',
+            //                 '#ef4444'
+            //             ]
+            //         }]
+            //     },
+            //     options: {
+            //         responsive: true,
+            //         plugins: {
+            //             title: {
+            //                 display: true,
+            //                 text: 'Membership Status Distribution',
+            //                 color: '#e5e7eb',
+            //                 font: { size: 16, weight: '600' }
+            //             },
+            //             legend: {
+            //                 position: 'bottom',
+            //                 labels: { color: '#9ca3af' }
+            //             }
+            //         }
+            //     }
+            // });
         };
     
         // Fetch and process data
@@ -1257,7 +1258,7 @@
             try {
                 const [
                     usersResponse,
-                    membershipsResponse,
+                    // membershipsResponse,
                     collaborationsResponse,
                     donationsResponse,
                     messagesResponse,
@@ -1270,11 +1271,11 @@
                             'Authorization': `Bearer ${token}` // Include token in headers
                         }
                     }),
-                    fetch('https://api.khcrf.org/api/form/all', {
-                        headers: {
-                            'Authorization': `Bearer ${token}` // Include token in headers
-                        }
-                    }),
+                    // fetch('https://api.khcrf.org/api/form/all', {
+                    //     headers: {
+                    //         'Authorization': `Bearer ${token}` // Include token in headers
+                    //     }
+                    // }),
                     fetch('https://api.khcrf.org/api/collaborations', {
                         headers: {
                             'Authorization': `Bearer ${token}` // Include token in headers
@@ -1308,13 +1309,13 @@
                 ]);
     
                 // Check if responses are OK
-                if (!usersResponse.ok || !membershipsResponse.ok || !collaborationsResponse.ok || !donationsResponse.ok || !messagesResponse.ok || !preOrdersResponse.ok || !certificationsResponse.ok || !badgesResponse.ok) {
+                if (!usersResponse.ok || !collaborationsResponse.ok || !donationsResponse.ok || !messagesResponse.ok || !preOrdersResponse.ok || !certificationsResponse.ok || !badgesResponse.ok) {
                     throw new Error('Failed to fetch data from one or more endpoints');
                 }
     
                 // Parse JSON responses
                 const users = await usersResponse.json();
-                const memberships = await membershipsResponse.json();
+                // const memberships = await membershipsResponse.json();
                 const collaborations = await collaborationsResponse.json();
                 const donations = await donationsResponse.json();
                 const messages = await messagesResponse.json();
@@ -1324,7 +1325,7 @@
     
                 // Debug: Log API responses
                 console.log('Users:', users);
-                console.log('Memberships:', memberships);
+                // console.log('Memberships:', memberships);
                 console.log('Collaborations:', collaborations);
                 console.log('Donations:', donations);
                 console.log('Messages:', messages);
@@ -1336,12 +1337,12 @@
                 const data = {
                     totalUsers: users.length || 0,
                     totalAdmins: users.filter(user => user.isAdmin).length || 0,
-                    totalMembers: memberships.length || 0,
+                    // totalMembers: memberships.length || 0,
                     totalDonors: donations.data.length || 0,
                     totalCollaborators: collaborations.length || 0,
-                    pendingMembers: memberships.filter(m => m.status === 'pending').length || 0,
-                    approvedMembers: memberships.filter(m => m.status === 'approved').length || 0,
-                    rejectedMembers: memberships.filter(m => m.status === 'rejected').length || 0,
+                    // pendingMembers: memberships.filter(m => m.status === 'pending').length || 0,
+                    // approvedMembers: memberships.filter(m => m.status === 'approved').length || 0,
+                    // rejectedMembers: memberships.filter(m => m.status === 'rejected').length || 0,
                     totalEbookOrders: preOrders.length || 0, // Use pre-orders count for eBook orders
                     totalBusinessEvaluation: 0, // Not implemented in backend
                     totalCertificationOrders: certifications.length || 0,
@@ -1448,8 +1449,6 @@
         // Refresh data every 5 minutes
         setInterval(fetchData, 300000);
     </script>
-
-
 
 <script>
     // Get references to the menu toggle and nav links
